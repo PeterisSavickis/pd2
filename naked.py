@@ -1,41 +1,57 @@
+# import library
 import requests
 import json
 import datetime
 import time
 import yaml
-
+# Import datetime from library
 from datetime import datetime
+# Print text
 print('Asteroid processing service')
 
 # Initiating and reading config values
 print('Loading configuration from file')
 
-# 
+# save api key and url in variables (bad practice, they at least should be constants)
 nasa_api_key = "HUnRs7BZz6xxZWfKlvXo9tMeqGmuss14JgayOAqu"
 nasa_api_url = "https://api.nasa.gov/neo/"
 
 # Getting todays date
 dt = datetime.now()
-request_date = str(dt.year) + "-" + str(dt.month).zfill(2) + "-" + str(dt.day).zfill(2)  
+# Format date in format yyyy-mm-dd
+request_date = str(dt.year) + "-" + str(dt.month).zfill(2) + "-" + str(dt.day).zfill(2)
+# Print aut formated todays date
 print("Generated today's date: " + str(request_date))
 
-
+# Print out Request url with header parameters with start date, end date and api key
 print("Request url: " + str(nasa_api_url + "rest/v1/feed?start_date=" + request_date + "&end_date=" + request_date + "&api_key=" + nasa_api_key))
+# Do the REST callout to NASA API
 r = requests.get(nasa_api_url + "rest/v1/feed?start_date=" + request_date + "&end_date=" + request_date + "&api_key=" + nasa_api_key)
 
+# Print response status - 200 if everything went ok
 print("Response status code: " + str(r.status_code))
+# Print received headers
 print("Response headers: " + str(r.headers))
+# Print response text you receive from NASA API
 print("Response content: " + str(r.text))
 
+# Only perform action if the response is 200 - everything is good
 if r.status_code == 200:
 
+	# Format the response as JSON
 	json_data = json.loads(r.text)
-
+	# Array of safe asteroids
 	ast_safe = []
+	# Array of dangerous asteroids
 	ast_hazardous = []
 
+	# is there any data in response
 	if 'element_count' in json_data:
+		# Write in variable how many asteroids there are today
+		# It gets element_count part value from the JSON response array
 		ast_count = int(json_data['element_count'])
+		# Print how many asteroids there were today
+		# Force cast ast_count as string to print it out
 		print("Asteroid count today: " + str(ast_count))
 
 		if ast_count > 0:
