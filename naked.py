@@ -4,17 +4,31 @@ import json
 import datetime
 import time
 import yaml
-# Import datetime from library
+
 from datetime import datetime
+from configparser import ConfigParser
 # Print text
 print('Asteroid processing service')
 
 # Initiating and reading config values
 print('Loading configuration from file')
 
-# save api key and url in variables (bad practice, they at least should be constants)
-nasa_api_key = "HUnRs7BZz6xxZWfKlvXo9tMeqGmuss14JgayOAqu"
-nasa_api_url = "https://api.nasa.gov/neo/"
+# Try-Except block
+try:
+	# Initialise configParser library
+	config = ConfigParser()
+	# Read the config file
+	config.read('config.ini')
+
+	# Use configParser library to get NASA API key and URL
+	nasa_api_key = config.get('nasa', 'api_key')
+	nasa_api_url = config.get('nasa', 'api_url')
+except:
+	#This would not work as there is no logger initialised. But if this crashes we have exception anyways.
+	logger.exception('')
+# Prints DONE when API KEY and URL is saved in variables
+print('DONE')
+
 
 # Getting todays date
 dt = datetime.now()
